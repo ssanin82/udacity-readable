@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
+import { createStore, applyMiddleware, compose } from 'redux'
+import { Provider } from 'react-redux'
 
 const logger = store => next => action => {
   console.group(action.type);
@@ -15,8 +17,17 @@ const logger = store => next => action => {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+function dummyReducer(state, action) {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return state.concat([action.text]);
+    default:
+      return state;
+  }
+};
+
 const store = createStore(
-  reducer,
+  dummyReducer,
   composeEnhancers(
     applyMiddleware(logger)
   )
